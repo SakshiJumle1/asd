@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+void bubbleSort(int arr[], int n) {
+for (int i = 0; i < n - 1; i++) {
+for (int j = 0; j < n - i - 1; j++) {
+if (arr[j] > arr[j + 1]) {
+int temp = arr[j];
+arr[j] = arr[j + 1];
+arr[j + 1] = temp;
+}
+}
+}
+}
+void SCAN(int req[], int n, int head, int diskSize) {
+int totalMovement = 0, i;
+bubbleSort(req, n);
+for (i = 0; i < n && req[i] < head; i++);
+
+for (int j = i - 1; j >= 0; j--) {
+totalMovement += abs(req[j] - head);
+head = req[j];
+printf("Head moved to: %d\n", head);
+}
+
+totalMovement += abs(head - 0); // Move to 0
+head = 0;
+printf("Head moved to: %d\n", head);
+
+for (int j = i; j < n; j++) {
+totalMovement += abs(req[j] - head);
+head = req[j];
+printf("Head moved to: %d\n", head);
+}
+
+printf("Total Head Movement (SCAN): %d\n", totalMovement);
+}
+int main() {
+int n, head, diskSize;
+printf("Enter the number of requests: ");
+scanf("%d", &n);
+int req[n];
+printf("Enter the requests: ");
+for (int i = 0; i < n; i++) {
+scanf("%d", &req[i]);
+}
+printf("Enter initial head position: ");
+scanf("%d", &head);
+printf("Enter disk size: ");
+scanf("%d", &diskSize);
+
+SCAN(req, n, head, diskSize);
+
+return 0;
+}
