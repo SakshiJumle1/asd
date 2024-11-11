@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <limits.h>
+#define MAX_FRAMES 10
+#define MAX_PAGES 30
+
+int pages[MAX_PAGES], frames[MAX_FRAMES], n, fsize;
+
+int isPageInFrames(int page) {
+    for (int i = 0; i < fsize; i++)
+        if (frames[i] == page) return 1;
+    return 0;
+}
+
+void displayFrames() {
+    printf("Frames: ");
+    for (int i = 0; i < fsize; i++) {
+        if (frames[i] == -1) printf("- ");
+        else printf("%d ", frames[i]);
+    }
+    printf("\n");
+}
+
+void Optimal() {
+    int page_faults = 0;
+    for (int i = 0; i < n; i++) {
+        if (!isPageInFrames(pages[i])) {
+            int replace_index = 0, furthest = i;
+            for (int j = 0; j < fsize; j++) {
+                int next_use = INT_MAX;
+                for (int k = i + 1; k < n; k++) {
+                    if (frames[j] == pages[k]) { next_use = k; break; }
+                }
+                if (next_use > furthest) {
+                    furthest = next_use;
+                    replace_index = j;
+                }
+            }
+            frames[replace_index] = pages[i];
+            page_faults++;
+            printf("Page fault at page %d: ", pages[i]);
+            displayFrames();
+        }
+    }
+    printf("Optimal Page Faults: %d\n", page_faults);
+}
+
+int main() {
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
+    printf("Enter page reference string: ");
+    for (int i = 0; i < n; i++) scanf("%d", &pages[i]);
+    printf("Enter number of frames: ");
+    scanf("%d", &fsize);
+    for (int i = 0; i < fsize; i++) frames[i] = -1;
+    Optimal();
+    return 0;
+}
